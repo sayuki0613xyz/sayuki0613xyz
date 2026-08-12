@@ -17,6 +17,138 @@
 .mobile-tabs{display:none}.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);z-index:100;display:none;align-items:flex-end;justify-content:center}.modal-backdrop.open{display:flex}.modal{width:min(620px,100%);max-height:92vh;overflow:auto;scrollbar-width:none;background:var(--card);border-radius:28px 28px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -20px 60px rgba(0,0,0,.18)}.modal::-webkit-scrollbar{display:none}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-head h3{margin:0;font-size:20px}.close{border:0;background:var(--soft);color:var(--text);width:34px;height:34px;border-radius:50%}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;color:var(--muted);font-weight:700}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:14px;padding:12px;outline:none}.field textarea{min-height:88px;resize:vertical}.emoji-input-wrap{display:flex;align-items:center;gap:10px}.emoji-input{font-size:28px;text-align:center;width:72px!important}.emoji-picker{display:flex;gap:7px;overflow:auto;padding-bottom:4px;scrollbar-width:none}.emoji-picker::-webkit-scrollbar{display:none}.emoji-choice{flex:0 0 42px;border:1px solid var(--line);background:var(--soft);border-radius:12px;aspect-ratio:1;display:grid;place-items:center;font-size:22px}.emoji-choice.active{border-color:var(--text)}.modal-actions{display:flex;gap:10px;margin-top:18px}.modal-actions button{flex:1}.checkin-entries{display:grid;gap:8px;margin:12px 0}.entry-row{background:var(--soft);border-radius:14px;padding:11px}.entry-meta{font-size:12px;color:var(--muted);margin-bottom:5px}.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;background:#1c1c1e;color:white;padding:12px 16px;border-radius:999px;z-index:200;transition:.25s;pointer-events:none;font-weight:650;font-size:14px}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:860px){.app-shell{display:block;padding:14px 14px 92px}.sidebar{display:none}.main{padding-bottom:0}.title{font-size:30px}.calendar-layout{grid-template-columns:1fr}.habit-manage-grid,.wish-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}.mobile-tabs{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:10px;right:10px;bottom:10px;z-index:90;background:rgba(255,255,255,.86);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:22px;padding:7px;box-shadow:0 14px 44px rgba(0,0,0,.12)}.mobile-tabs button{border:0;background:transparent;color:var(--muted);border-radius:14px;padding:8px 4px;font-size:11px;display:flex;flex-direction:column;gap:4px;align-items:center;font-weight:700}.mobile-tabs button span{font-size:20px}.mobile-tabs button.active{background:var(--soft);color:var(--text)}.day{min-height:68px;padding:6px}}
 @media(max-width:540px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.stats-grid{grid-template-columns:1fr 1fr}.calendar-grid{gap:3px}.day{min-height:62px;border-radius:10px}.day-num{font-size:12px}.top-actions{display:none}.summary-card{padding:16px}.progress-ring{width:72px;height:72px}.progress-ring:after{width:54px;height:54px}.category-toolbar{align-items:flex-start;flex-direction:column}.category-toolbar>.secondary-btn{align-self:flex-end}.week-progress{gap:4px}.week-box{height:22px}}
+
+/* iPhone / iOS mobile-first refinements */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden}
+body{overflow-x:hidden;min-height:100dvh}
+button,input,select,textarea{-webkit-tap-highlight-color:transparent}
+
+@media(max-width:430px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{background:#f5f5f7}
+  .app-shell{
+    width:100%;max-width:100%;margin:0;
+    padding:max(12px,env(safe-area-inset-top)) 12px calc(88px + env(safe-area-inset-bottom));
+    min-height:100dvh;
+  }
+  .main{width:100%;max-width:100%;min-width:0;padding-bottom:0}
+  .page{width:100%;max-width:100%;min-width:0}
+  .topbar{margin-bottom:14px;padding:2px 1px;gap:10px;align-items:flex-start}
+  .eyebrow{font-size:11px;letter-spacing:.07em}
+  .title{font-size:29px;line-height:1.08;margin:3px 0}
+  .subtitle{font-size:13px;line-height:1.45;margin-top:5px;max-width:270px}
+  .top-actions{flex-shrink:0}
+  .top-actions .secondary-btn{padding:9px 12px;border-radius:12px;font-size:14px;white-space:nowrap}
+
+  .compact-points{margin-bottom:12px;padding:6px 10px;gap:6px}
+  .compact-points .money{font-size:17px}
+  .compact-points .score{font-size:14px}
+  .compact-points .mini-meta{font-size:11px}
+
+  .summary-card{padding:15px;border-radius:21px;gap:12px;margin-bottom:16px;grid-template-columns:minmax(0,1fr) 68px}
+  .summary-card h2{font-size:22px;line-height:1.12}
+  .summary-card p{font-size:12px;line-height:1.4;margin-top:5px}
+  .progress-ring{width:66px;height:66px}
+  .progress-ring:after{width:50px;height:50px}
+  .progress-ring span{font-size:14px}
+  .week-progress{gap:4px;margin-top:1px}
+  .week-box{height:23px;border-radius:7px;font-size:9px;padding:0 1px}
+  .week-label{font-size:9px;margin-top:3px}
+
+  .section-header{margin:19px 1px 10px}
+  .section-header h3{font-size:18px}
+  .section-header button{font-size:14px;padding:4px 0}
+  .habit-list{gap:9px}
+  .habit-card{padding:11px 12px;border-radius:18px;grid-template-columns:42px minmax(0,1fr) auto;gap:10px}
+  .habit-emoji{width:42px;height:42px;border-radius:14px;font-size:23px}
+  .habit-name{font-size:16px;line-height:1.2}
+  .habit-meta{font-size:11px;gap:5px;margin-top:4px;min-width:0}
+  .pill,.reward-tag{font-size:10px;padding:3px 6px}
+  .check-btn{min-width:42px;height:42px;border-radius:13px;font-size:12px;padding:0 7px}
+
+  .category-toolbar{align-items:flex-start;gap:8px;margin-bottom:12px}
+  .category-tabs{gap:6px;min-width:0;flex:1;padding-bottom:3px}
+  .category-tab{font-size:12px;padding:7px 10px}
+  .category-toolbar>.secondary-btn{font-size:12px;padding:8px 10px;white-space:nowrap;border-radius:12px}
+  .habit-manage-grid,.wish-grid{grid-template-columns:1fr;gap:10px}
+  .manage-card,.wish-card{padding:13px;border-radius:18px}
+  .manage-title{gap:7px;min-width:0}
+  .manage-actions{gap:4px}
+  .drag-handle{font-size:18px;padding:8px 2px}
+  .mini-btn{padding:7px;border-radius:9px}
+
+  .calendar-layout{grid-template-columns:1fr;gap:12px}
+  .calendar-card,.panel{padding:12px;border-radius:19px}
+  .calendar-toolbar{margin-bottom:8px}
+  .calendar-toolbar h3{font-size:18px}
+  .calendar-toolbar button{min-width:32px;height:32px;padding:0 8px;border-radius:10px;font-size:12px}
+  .calendar-grid{gap:3px}
+  .dow{font-size:10px;padding:5px 0}
+  .day{min-height:54px;padding:5px 4px;border-radius:9px;gap:2px}
+  .day-num{font-size:11px}
+  .emoji-row{font-size:10px;line-height:1.05;max-height:22px;overflow:hidden}
+  .status-dot{width:5px;height:5px}
+  .detail-item{padding:10px;border-radius:13px}
+  .detail-note{max-width:185px}
+
+  .points-card{padding:14px 15px;border-radius:20px;gap:10px;margin-bottom:14px}
+  .points-value{font-size:25px}
+  .points-label{font-size:11px}
+  .points-chip{font-size:11px;padding:7px 9px}
+  .wish-icon{width:43px;height:43px;border-radius:14px;font-size:22px}
+  .wish-cost{font-size:17px}
+  .wish-desc{font-size:12px;margin:8px 0 12px}
+
+  .stats-grid{grid-template-columns:1fr 1fr;gap:9px}
+  .stat-card{padding:14px;border-radius:18px}
+  .stat-num{font-size:26px}
+  .stat-label{font-size:11px}
+  .heatmap{grid-template-columns:repeat(14,1fr);gap:3px}
+  .setting-row{padding:13px;border-radius:16px;align-items:flex-start}
+  .setting-title{font-size:14px}
+  .setting-desc{font-size:11px;line-height:1.4}
+
+  .mobile-tabs{
+    left:8px;right:8px;
+    bottom:max(8px,env(safe-area-inset-bottom));
+    border-radius:20px;
+    padding:5px 5px calc(5px + max(0px,env(safe-area-inset-bottom) - 8px));
+    min-height:64px;
+  }
+  .mobile-tabs button{padding:6px 2px;font-size:10px;border-radius:12px;min-width:0}
+  .mobile-tabs button span{font-size:19px}
+
+  .modal-backdrop{padding-top:env(safe-area-inset-top)}
+  .modal{
+    width:100%;max-width:100%;
+    max-height:calc(100dvh - env(safe-area-inset-top) - 6px);
+    border-radius:24px 24px 0 0;
+    padding:17px 14px calc(18px + env(safe-area-inset-bottom));
+  }
+  .modal-head{margin-bottom:14px;position:sticky;top:0;background:var(--card);z-index:2;padding-bottom:4px}
+  .modal-head h3{font-size:18px}
+  .form-grid{grid-template-columns:1fr;gap:10px}
+  .field.full{grid-column:auto}
+  .field label{font-size:12px}
+  .field input,.field select,.field textarea{font-size:16px;padding:11px;border-radius:13px}
+  .field textarea{min-height:76px}
+  .emoji-input{font-size:26px!important;width:66px!important}
+  .emoji-choice{flex-basis:40px;font-size:21px}
+  .modal-actions{position:sticky;bottom:calc(-18px - env(safe-area-inset-bottom));background:var(--card);padding:10px 0 calc(5px + env(safe-area-inset-bottom));margin-top:12px;z-index:2}
+  .modal-actions button{min-height:44px;border-radius:13px}
+  .toast{bottom:calc(82px + env(safe-area-inset-bottom));max-width:calc(100vw - 28px);text-align:center;font-size:13px}
+}
+
+@media(max-width:370px){
+  .title{font-size:27px}
+  .summary-card{grid-template-columns:minmax(0,1fr) 60px;padding:13px}
+  .progress-ring{width:58px;height:58px}.progress-ring:after{width:44px;height:44px}
+  .week-progress{gap:3px}.week-box{font-size:8px}
+  .habit-card{grid-template-columns:38px minmax(0,1fr) auto;padding:10px;gap:8px}
+  .habit-emoji{width:38px;height:38px;font-size:21px}
+  .calendar-grid{gap:2px}.day{min-height:50px;padding:4px 3px}
+}
+
 </style>
 </head>
 <body>
