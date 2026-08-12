@@ -283,6 +283,47 @@ button,input,select,textarea{-webkit-tap-highlight-color:transparent}
   #page-habits .pill,#page-habits .reward-tag{box-shadow:none}
   #page-habits .category-tabs{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
 }
+
+/* v12 iOS input responsiveness: avoid nested fixed scrolling while keyboard is open */
+@media(max-width:860px){
+  .modal-backdrop{
+    align-items:flex-end;
+    overflow-x:hidden;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
+    touch-action:pan-y;
+    padding-top:max(env(safe-area-inset-top),8px);
+  }
+  .modal{
+    flex:0 0 auto;
+    max-height:none;
+    overflow:visible;
+    -webkit-overflow-scrolling:auto;
+    overscroll-behavior:auto;
+    touch-action:auto;
+    contain:none;
+    transform:none;
+  }
+  .modal input:not([type=checkbox]):not([type=hidden]),
+  .modal select,
+  .modal textarea{
+    min-height:52px;
+    touch-action:auto;
+    -webkit-user-select:text;
+    user-select:text;
+    caret-color:var(--text);
+  }
+  .modal textarea{min-height:96px;line-height:1.45}
+  .modal input:focus,.modal textarea:focus,.modal select:focus{
+    border-color:#bfc0c5;
+    background:#fff;
+  }
+  .field label{min-height:28px;display:flex;align-items:center;cursor:pointer}
+  #habitRepeat,#habitCategory{touch-action:auto}
+}
+
+@media(max-width:860px){html.modal-open body{overflow:hidden}html.modal-open .modal-backdrop{touch-action:pan-y}html.modal-open .modal{touch-action:auto}}
 </style>
 </head>
 <body>
@@ -294,12 +335,12 @@ button,input,select,textarea{-webkit-tap-highlight-color:transparent}
 <nav class="mobile-tabs" aria-label="底部导航"><button class="active" data-page="today"><span>☀️</span>今天</button><button data-page="calendar"><span>📅</span>日历</button><button data-page="habits"><span>🧩</span>习惯</button><button data-page="rewards"><span>🎁</span>心愿</button><button data-page="stats"><span>📈</span>统计</button><button data-page="settings"><span>⚙️</span>设置</button></nav>
 
 <div class="modal-backdrop" id="habitModal"><div class="modal"><div class="modal-head"><h3 id="habitModalTitle">新建习惯</h3><button class="close" data-close="habitModal">✕</button></div><form id="habitForm"><input type="hidden" id="habitId"><div class="form-grid">
-<div class="field full"><label>Emoji</label><div class="emoji-input-wrap"><input class="emoji-input" id="habitEmoji" value="📖" maxlength="8" inputmode="text" autocomplete="off"><span style="color:var(--muted);font-size:13px">点击输入框，直接使用系统 Emoji 键盘输入</span></div></div>
-<div class="field"><label>习惯名称</label><input id="habitName" required placeholder="例如：阅读"></div><div class="field"><label>分类</label><select id="habitCategory"></select></div>
-<div class="field"><label>起始日期</label><input id="habitStart" type="date" required></div><div class="field"><label>重复方式</label><select id="habitRepeat"><option value="daily">每天</option><option value="interval">按间隔天数</option><option value="weekdays">指定星期</option></select></div>
-<div class="field" id="intervalField"><label>间隔天数（0 = 每天）</label><input id="habitInterval" type="number" min="0" value="1"></div><div class="field"><label>每日打卡次数</label><input id="habitDailyTarget" type="number" min="1" max="99" value="1"></div>
-<div class="field"><label>每次打卡奖励积分</label><input id="habitReward" type="number" min="0" step="1" value="5"></div><div class="field full" id="weekdayField"><label>指定星期（可多选）</label><div style="display:flex;gap:6px;flex-wrap:wrap" id="weekdayPicker"></div></div>
-<div class="field full"><label>说明（可选）</label><textarea id="habitDescription" placeholder="给这个习惯写一句说明"></textarea></div></div><div class="modal-actions"><button type="button" class="danger-btn" id="deleteHabitBtn" style="display:none">删除</button><button type="submit" class="primary-btn">保存</button></div></form></div></div>
+<div class="field full"><label for="habitEmoji">Emoji</label><div class="emoji-input-wrap"><input class="emoji-input" id="habitEmoji" value="📖" maxlength="8" inputmode="text" autocomplete="off"><span style="color:var(--muted);font-size:13px">点击输入框，直接使用系统 Emoji 键盘输入</span></div></div>
+<div class="field"><label for="habitName">习惯名称</label><input id="habitName" required placeholder="例如：阅读" autocomplete="off" autocapitalize="off" enterkeyhint="next"></div><div class="field"><label for="habitCategory">分类</label><select id="habitCategory"></select></div>
+<div class="field"><label for="habitStart">起始日期</label><input id="habitStart" type="date" required></div><div class="field"><label for="habitRepeat">重复方式</label><select id="habitRepeat"><option value="daily">每天</option><option value="interval">按间隔天数</option><option value="weekdays">指定星期</option></select></div>
+<div class="field" id="intervalField"><label for="habitInterval">间隔天数（0 = 每天）</label><input id="habitInterval" type="number" min="0" value="1"></div><div class="field"><label for="habitDailyTarget">每日打卡次数</label><input id="habitDailyTarget" type="number" min="1" max="99" value="1"></div>
+<div class="field"><label for="habitReward">每次打卡奖励积分</label><input id="habitReward" type="number" min="0" step="1" value="5"></div><div class="field full" id="weekdayField"><label>指定星期（可多选）</label><div style="display:flex;gap:6px;flex-wrap:wrap" id="weekdayPicker"></div></div>
+<div class="field full"><label for="habitDescription">说明（可选）</label><textarea id="habitDescription" placeholder="给这个习惯写一句说明" autocomplete="off"></textarea></div></div><div class="modal-actions"><button type="button" class="danger-btn" id="deleteHabitBtn" style="display:none">删除</button><button type="submit" class="primary-btn">保存</button></div></form></div></div>
 
 <div class="modal-backdrop" id="checkinModal"><div class="modal"><div class="modal-head"><h3 id="checkinTitle">打卡备注</h3><button class="close" data-close="checkinModal">✕</button></div><form id="checkinForm"><input type="hidden" id="checkinHabitId"><input type="hidden" id="checkinDate"><input type="hidden" id="checkinEntryIndex"><div id="checkinProgressText" class="points-label"></div><div class="field full" style="margin-top:12px"><label>这次打卡备注</label><textarea id="checkinNote" placeholder="例如：今天完成得很顺利。"></textarea></div><div class="checkin-entries" id="checkinEntries"></div><div class="modal-actions"><button type="button" class="danger-btn" id="removeLatestCheckinBtn">撤销本次</button><button type="submit" class="primary-btn">保存</button></div></form></div></div>
 
@@ -307,7 +348,7 @@ button,input,select,textarea{-webkit-tap-highlight-color:transparent}
 
 <div class="modal-backdrop" id="categoryModal"><div class="modal"><div class="modal-head"><h3>设置分类</h3><button class="close" data-close="categoryModal">✕</button></div><div class="field full"><label>新增分类</label><div style="display:flex;gap:8px"><input id="newCategoryName" placeholder="例如：健康、学习、运动"><button type="button" class="primary-btn" id="addCategoryBtn">添加</button></div></div><div class="category-manage-list" id="categoryManageList"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="categoryModal">完成</button></div></div></div>
 
-<div class="modal-backdrop" id="renameCategoryModal"><div class="modal"><div class="modal-head"><h3>重命名分类</h3><button class="close" data-close="renameCategoryModal">✕</button></div><input type="hidden" id="renameCategoryOld"><div class="field"><label>新名称</label><input id="renameCategoryName"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="renameCategoryModal">取消</button><button type="button" class="primary-btn" id="saveRenameCategoryBtn">保存</button></div></div></div>
+<div class="modal-backdrop" id="renameCategoryModal"><div class="modal"><div class="modal-head"><h3>重命名分类</h3><button class="close" data-close="renameCategoryModal">✕</button></div><input type="hidden" id="renameCategoryOld"><div class="field"><label for="renameCategoryName">新名称</label><input id="renameCategoryName"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="renameCategoryModal">取消</button><button type="button" class="primary-btn" id="saveRenameCategoryBtn">保存</button></div></div></div>
 <div class="toast" id="toast"></div><input type="file" id="importFile" accept="application/json" hidden>
 <script>
 const STORAGE_KEY='habit_tracker_v1_data';
@@ -360,7 +401,7 @@ function heatmapCells(){const start=new Date();start.setDate(start.getDate()-55)
 function renderSettings(){document.getElementById('page-settings').innerHTML=pageHeader('SETTINGS','设置','数据只保存在当前浏览器。')+`<div class="settings-list"><div class="setting-row"><div><div class="setting-title">积分规则</div><div class="setting-desc">每次打卡获得对应积分，达到每日次数后当天才算完成。</div></div><div class="points-chip">${pointBalance()} 点</div></div><div class="setting-row"><div><div class="setting-title">导出数据</div><div class="setting-desc">包含习惯、打卡、积分、心愿和兑换记录。</div></div><button class="secondary-btn" onclick="exportData()">导出</button></div><div class="setting-row"><div><div class="setting-title">导入数据</div><div class="setting-desc">从之前导出的 JSON 文件恢复。</div></div><button class="secondary-btn" onclick="document.getElementById('importFile').click()">导入</button></div><div class="setting-row"><div><div class="setting-title">重置全部数据</div><div class="setting-desc">删除所有习惯、打卡和兑换记录。</div></div><button class="danger-btn" onclick="resetData()">重置</button></div></div>`}
 function renderAll(){renderToday();renderCalendar();renderHabits();renderRewards();renderStats();renderSettings();syncNav();fillCategorySelect()}
 function navigate(p){currentPage=p;showPage(p)}function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('page-'+p)?.classList.add('active');syncNav()}function syncNav(){document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===currentPage));const active=document.querySelector(`.mobile-tabs [data-page="${currentPage}"]`);active?.scrollIntoView?.({behavior:'smooth',block:'nearest',inline:'center'})}
-function openModal(id){document.getElementById(id).classList.add('open')}function closeModal(id){document.getElementById(id).classList.remove('open')}
+function openModal(id){const m=document.getElementById(id);m.classList.add('open');document.documentElement.classList.add('modal-open');requestAnimationFrame(()=>{m.scrollTop=0})}function closeModal(id){document.getElementById(id).classList.remove('open');if(!document.querySelector('.modal-backdrop.open'))document.documentElement.classList.remove('modal-open')}
 function renderWeekdayPicker(selected){document.getElementById('weekdayPicker').innerHTML=weekdays.map((w,i)=>`<label class="pill" style="display:flex;gap:5px;align-items:center"><input type="checkbox" name="weekday" value="${i}" ${selected.includes(i)?'checked':''}>周${w}</label>`).join('')}
 function fillCategorySelect(){const sel=document.getElementById('habitCategory');if(!sel)return;const cur=sel.value;sel.innerHTML=[...(state.categories||[]),'未分类'].filter((v,i,a)=>a.indexOf(v)===i).map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');if([...sel.options].some(o=>o.value===cur))sel.value=cur}
 function toggleRepeatFields(){const v=document.getElementById('habitRepeat').value;document.getElementById('intervalField').style.display=v==='interval'?'flex':'none';document.getElementById('weekdayField').style.display=v==='weekdays'?'flex':'none'}
