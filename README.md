@@ -1,16 +1,15 @@
-## Hi there 👋
+# Habit Tracker
 
-<!--
-**sayuki0613xyz/sayuki0613xyz** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+A personal habit tracker built as a single static HTML app.
 
-Here are some ideas to get you started:
+## GitHub Pages
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+1. Create a new GitHub repository.
+2. Upload `index.html` to the repository root.
+3. Go to Settings > Pages.
+4. Under Build and deployment, choose Deploy from a branch.
+5. Select `main` and `/ (root)`, then Save.
+
+Your site will be available at:
+
+`https://YOUR-USERNAME.github.io/YOUR-REPOSITORY/`
