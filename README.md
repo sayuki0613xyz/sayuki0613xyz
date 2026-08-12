@@ -1,6 +1,7 @@
 # Habit Tracker
 
 A personal habit tracker built as a single static HTML app.
+🌐 Live Demo: https://sayuki0613xyz.github.io/sayuki0613xyz/
 
 ## GitHub Pages
 
