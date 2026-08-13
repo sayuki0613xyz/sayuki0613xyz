@@ -435,6 +435,41 @@ button,input,select,textarea{-webkit-tap-highlight-color:transparent}
   #habitModal .emoji-input-wrap{grid-template-columns:58px!important}
 }
 
+
+/* v14 mobile category strip: keep one row and scroll horizontally without widening the page */
+@media(max-width:860px){
+  #page-habits .category-toolbar{
+    display:block;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow:hidden;
+  }
+  #page-habits .category-tabs{
+    display:flex;
+    flex-wrap:nowrap;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    gap:7px;
+    padding:2px 2px 7px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x proximity;
+  }
+  #page-habits .category-tabs::-webkit-scrollbar{display:none}
+  #page-habits .category-tab{
+    flex:0 0 auto;
+    max-width:78vw;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    scroll-snap-align:start;
+  }
+}
 </style>
 </head>
 <body>
