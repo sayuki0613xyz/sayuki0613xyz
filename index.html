@@ -470,6 +470,69 @@ button,input,select,textarea{-webkit-tap-highlight-color:transparent}
     scroll-snap-align:start;
   }
 }
+
+/* v15: make the category strip itself a native horizontal scroll viewport on iOS.
+   The outer toolbar owns scrolling; the inner tab row is max-content so overflow is real. */
+@media(max-width:860px){
+  #page-habits .category-toolbar{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-x!important;
+    overscroll-behavior-x:contain;
+    scrollbar-width:none!important;
+    padding:2px 0 7px!important;
+    margin-bottom:12px!important;
+  }
+  #page-habits .category-toolbar::-webkit-scrollbar{display:none!important}
+  #page-habits .category-tabs{
+    display:inline-flex!important;
+    flex-wrap:nowrap!important;
+    width:max-content!important;
+    max-width:none!important;
+    min-width:100%!important;
+    overflow:visible!important;
+    gap:7px!important;
+    padding:0 2px!important;
+    white-space:nowrap!important;
+    scroll-snap-type:none!important;
+  }
+  #page-habits .category-tab{
+    flex:0 0 auto!important;
+    width:auto!important;
+    max-width:78vw!important;
+    touch-action:manipulation!important;
+    -webkit-tap-highlight-color:transparent;
+  }
+}
+
+
+/* v16 desktop category drag-scroll */
+@media (hover:hover) and (pointer:fine){
+  #page-habits .category-toolbar{
+    overflow-x:auto;
+    overflow-y:hidden;
+    scrollbar-width:none;
+    cursor:grab;
+    user-select:none;
+  }
+  #page-habits .category-toolbar::-webkit-scrollbar{display:none}
+  #page-habits .category-toolbar.category-dragging{
+    cursor:grabbing;
+    scroll-behavior:auto;
+  }
+  #page-habits .category-tabs{
+    width:max-content;
+    min-width:100%;
+    overflow:visible;
+  }
+  #page-habits .category-tab{flex:0 0 auto}
+}
+
 </style>
 </head>
 <body>
@@ -556,6 +619,50 @@ function toggleRepeatFields(){const v=document.getElementById('habitRepeat').val
 function openHabitModal(id=''){const form=document.getElementById('habitForm');form.reset();document.getElementById('habitId').value=id;document.getElementById('habitStart').value=formatDate(new Date());document.getElementById('habitRepeat').value='daily';document.getElementById('habitInterval').value=0;document.getElementById('habitDailyTarget').value=1;document.getElementById('habitReward').value=5;document.getElementById('habitEmoji').value='📖';document.getElementById('habitDescription').value='';document.getElementById('habitModalTitle').textContent=id?'编辑习惯':'新建习惯';fillCategorySelect();const del=document.getElementById('deleteHabitBtn');del.style.display=id?'inline-flex':'none';del.dataset.deleteHabit=id||'';if(id){const h=state.habits.find(x=>x.id===id);if(h){document.getElementById('habitName').value=h.name;document.getElementById('habitCategory').value=h.category||'未分类';document.getElementById('habitStart').value=h.startDate;document.getElementById('habitRepeat').value=h.repeat;document.getElementById('habitInterval').value=Math.max(0,Number(h.interval??0));document.getElementById('habitDailyTarget').value=targetOf(h);document.getElementById('habitReward').value=Number(h.rewardPoints||0);document.getElementById('habitDescription').value=h.description||'';document.getElementById('habitEmoji').value=h.emoji;renderWeekdayPicker(h.weekdays||[])}}else renderWeekdayPicker([]);toggleRepeatFields();openModal('habitModal')}
 function openCheckinModal(hid,date,index){const h=state.habits.find(x=>x.id===hid),c=getCheckin(hid,date);index=Math.max(0,Math.min(Number(index||0),Math.max(0,c.entries.length-1)));document.getElementById('checkinHabitId').value=hid;document.getElementById('checkinDate').value=date;document.getElementById('checkinEntryIndex').value=index;document.getElementById('checkinTitle').textContent=`${h?.emoji||''} ${h?.name||'打卡'} · ${prettyDate(date)}`;document.getElementById('checkinProgressText').textContent=`今日 ${c.entries.length}/${targetOf(h)} 次`;document.getElementById('checkinNote').value=c.entries[index]?.note||'';document.getElementById('checkinEntries').innerHTML=c.entries.map((e,i)=>`<div class="entry-row"><div class="entry-meta">第 ${i+1} 次 · +${Number(e.rewardPoints||0)} 点</div><div>${escapeHtml(e.note||'暂无备注')}</div></div>`).join('');document.getElementById('removeLatestCheckinBtn').style.display=c.entries.length?'inline-flex':'none';openModal('checkinModal')}
 function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`habit-backup-${formatDate(new Date())}.json`;a.click();URL.revokeObjectURL(url)}function resetData(){if(!confirm('确定重置全部数据？'))return;state=defaultState();saveState()}
+
+
+// v16: desktop mouse drag-to-scroll for the category strip.
+let categoryDrag=null;
+let suppressCategoryClick=false;
+document.addEventListener('pointerdown',e=>{
+  if(e.pointerType!=='mouse'||e.button!==0)return;
+  const strip=e.target.closest('#page-habits .category-toolbar');
+  if(!strip||strip.scrollWidth<=strip.clientWidth)return;
+  categoryDrag={strip,startX:e.clientX,startScroll:strip.scrollLeft,moved:false,pointerId:e.pointerId};
+  strip.setPointerCapture?.(e.pointerId);
+});
+document.addEventListener('pointermove',e=>{
+  if(!categoryDrag||e.pointerId!==categoryDrag.pointerId)return;
+  const dx=e.clientX-categoryDrag.startX;
+  if(!categoryDrag.moved&&Math.abs(dx)>5){
+    categoryDrag.moved=true;
+    categoryDrag.strip.classList.add('category-dragging');
+  }
+  if(categoryDrag.moved){
+    categoryDrag.strip.scrollLeft=categoryDrag.startScroll-dx;
+    e.preventDefault();
+  }
+},{passive:false});
+function endCategoryDrag(e){
+  if(!categoryDrag||e.pointerId!==categoryDrag.pointerId)return;
+  const {strip,moved}=categoryDrag;
+  strip.classList.remove('category-dragging');
+  try{strip.releasePointerCapture?.(e.pointerId)}catch(_){}
+  categoryDrag=null;
+  if(moved){
+    suppressCategoryClick=true;
+    setTimeout(()=>{suppressCategoryClick=false},0);
+  }
+}
+document.addEventListener('pointerup',endCategoryDrag);
+document.addEventListener('pointercancel',endCategoryDrag);
+document.addEventListener('click',e=>{
+  if(suppressCategoryClick&&e.target.closest('#page-habits .category-tab')){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    suppressCategoryClick=false;
+  }
+},true);
 
 document.addEventListener('click',e=>{const cf=e.target.closest('[data-category-filter]');if(cf){currentHabitCategory=cf.dataset.categoryFilter;renderHabits();return}if(e.target.closest('#manageCategoriesBtn')){openCategoryModal();return}const rc=e.target.closest('[data-rename-category]');if(rc){openRenameCategory(rc.dataset.renameCategory);return}const dc=e.target.closest('[data-delete-category]');if(dc){deleteCategory(dc.dataset.deleteCategory);return}const p=e.target.closest('[data-page]');if(p){currentPage=p.dataset.page;showPage(currentPage);return}const edit=e.target.closest('[data-edit-habit]');if(edit){openHabitModal(edit.dataset.editHabit);return}const del=e.target.closest('[data-delete-habit]');if(del){deleteHabit(del.dataset.deleteHabit);return}const c=e.target.closest('[data-close]');if(c)closeModal(c.dataset.close)});
 document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));
